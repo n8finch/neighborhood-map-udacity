@@ -1,0 +1,30 @@
+{
+  "name": "bourbon-starter",
+  "description": "a starter with bourbon, neat, bitters, refills, and jQuery for rapid prototyping",
+  "main": "index.html",
+  "authors": [
+    "Nate Finch <finchproservices@gmail.com>"
+  ],
+  "license": "GPLv-2",
+  "keywords": [
+    "bourbon",
+    "neat",
+    "bitters",
+    "refills",
+    "jquery"
+  ],
+  "homepage": "https://github.com/n8finch/design-lab-prototype",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "jquery": "^2.2.2",
+    "font-awesome": "fontawesome#^4.6.3"
+  }
+}
