@@ -14,17 +14,28 @@ module.exports = function(grunt) {
       }
     },
 
+    concat: {
+      options: {
+        separator: ''
+      },
+      dist: {
+        src: ['js/src/model.js', 'bower_components/oauth-signature/dist/oauth-signature.min.js', 'js/src/refills-components.js', 'js/src/app.js'],
+        dest: 'js/js.js',
+      },
+    },
+
 
 
     watch: {
-      files: ['sass/**/*.scss'],
-      tasks: ['sass']
+      files: ['sass/**/*.scss', 'js/src/*.js'],
+      tasks: ['sass', 'concat']
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-contrib-concat');
 
-  grunt.registerTask('default', ['sass', 'watch']);
+  grunt.registerTask('default', ['sass', 'concat', 'watch']);
 
 };
