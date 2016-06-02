@@ -19,7 +19,7 @@ module.exports = function(grunt) {
         separator: ''
       },
       dist: {
-        src: ['js/src/model.js', 'bower_components/oauth-signature/dist/oauth-signature.min.js', 'js/src/refills-components.js', 'js/src/app.js'],
+        src: ['js/src/model.js', 'bower_components/oauth-signature/dist/oauth-signature.min.js', 'js/src/refills-components.js', 'js/src/func-lib.js', 'js/src/app.js', 'js/src/ajax-calls.js'],
         dest: 'js/js.js',
       },
     },
