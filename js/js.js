@@ -91,7 +91,7 @@ $('.accordion-tabs-minimal').on('click', 'li > a.tab-link', function(event) {
 
 
 
-var ViewModel = function() {
+var ViewModel = function () {
 
   var self = this;
   /**the array of visible markers is the one the will be displayed on the mapl and in the list of resturants**/
@@ -107,7 +107,6 @@ var ViewModel = function() {
       center: new google.maps.LatLng(base.lat, base.lon)
     });
     var infowindow = new google.maps.InfoWindow({});
-
 
 
     /**creating all the markers on the map**/
@@ -143,55 +142,25 @@ var ViewModel = function() {
       });
     });
 
-    var input = document.getElementById('search-filter');
-    var searchBox = new google.maps.places.SearchBox(input);
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-    markers = [];
-    // Bias the SearchBox results towards current map's viewport.
-    searchBox.addListener('places_changed', function() {
-      var places = searchBox.getPlaces();
-
-      if (places.length == 0) {
-        return;
-      }
-
-      // Clear out the old markers.
-      markers.forEach(function(marker) {
-        marker.setMap(null);
-      });
-      markers = [];
-
-      // For each place, get the icon, name and location.
-      var bounds = new google.maps.LatLngBounds();
-      places.forEach(function(place) {
-        var icon = {
-          url: place.icon,
-          size: new google.maps.Size(71, 71),
-          origin: new google.maps.Point(0, 0),
-          anchor: new google.maps.Point(17, 34),
-          scaledSize: new google.maps.Size(25, 25)
-        };
-
-        // Create a marker for each place.
-        markers.push(new google.maps.Marker({
-          map: map,
-          icon: icon,
-          title: place.name,
-          position: place.geometry.location
-        }));
-
-        if (place.geometry.viewport) {
-          // Only geocodes have viewport.
-          bounds.union(place.geometry.viewport);
-        } else {
-          bounds.extend(place.geometry.location);
-        }
-      });
-      map.fitBounds(bounds);
-    });
 
   }
 
+  self.filterList = ko.observable('test');
+
+  self.filterList.subscribe(function (value) {
+    /**mark all markers as invisible and remove them from the visible markers list**/
+    self.markersMap().forEach(function (item) {
+      item.setVisible(false);
+      self.markersVisible.remove(item);
+    });
+    self.markersMap().forEach(function (item) {
+      if (item.title.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+        /**if the place is relevant to the search, make the marker visible and add the marker to the visible markers list**/
+        item.setVisible(true);
+        self.markersVisible.push(item);
+      }
+    });
+  });
 
   google.maps.event.addDomListener(window, 'load', initialize);
 };

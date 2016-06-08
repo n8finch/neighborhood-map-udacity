@@ -19,10 +19,6 @@
                 Click for Sliding Panel
             </button>
 
-            <button type="button" id="ajax-tester">
-                Ajax!
-            </button>
-
             <nav class="js-menu sliding-panel-content">
                 <div class="navigation-wrapper">
                     <div>
@@ -31,15 +27,18 @@
                     <div class="navigation-tools">
                         <div class="search-bar">
                             <form role="search">
-                                <input id="search-filter" type="search" placeholder="Enter Search" />
-                                <button type="submit">
-                                    <img src="https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/search-icon.png" alt="Search Icon">
-                                </button>
+                                <input id="search-filter" class="controls" type="search" placeholder="Filter the list..."  data-bind="textInput: filterList" autocomplete="off"/>
+                                <p data-bind="text: filterList"></p>
+
                             </form>
                         </div>
                     </div>
                 </div>
-                <ul id="bcn-list">
+
+                <ul id="bcn-list" data-bind="template: {foreach: markersVisible}">
+                    <li>
+                        <a data-bind="text: title, click: listClick" href="#"></a>
+                    </li>
                 </ul>
 
                 <hr/>
