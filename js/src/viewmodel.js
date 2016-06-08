@@ -24,10 +24,11 @@ var ViewModel = function () {
         map: map,
         title: item.name,
         info: item.info,
-        // URL: item.URL,
-        // rating: item.rating,
+        wiki: item.wiki,
+        foursquare: item.foursquare,
         /**if the location on the list is clicked than the info window of the marker will appear-**/
         listClick: function (thisMarker) {
+          ajaxWiki(marker.wiki);
           infowindow.setContent(thisMarker.info);
           infowindow.open(map, thisMarker);
         }
@@ -35,6 +36,10 @@ var ViewModel = function () {
       self.markersVisible.push(marker);
       self.markersMap.push(marker);
       marker.addListener('click', function () {
+
+        //load the ajax call on a
+        ajaxWiki(marker.wiki);
+
         /*if the animation is allready active, clicking again will stop it*/
         if (marker.getAnimation() == null) {
           marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -52,7 +57,7 @@ var ViewModel = function () {
 
   }
 
-  self.filterList = ko.observable('test');
+  self.filterList = ko.observable('');
 
   self.filterList.subscribe(function (value) {
     /**mark all markers as invisible and remove them from the visible markers list**/

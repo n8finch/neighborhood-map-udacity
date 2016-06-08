@@ -6,24 +6,19 @@
      */
 
 
-//Set the variables and URL string
+    ajaxWiki = function (wikiTerm) {
 
-
-// Make the AJAX request
-
-
-    $('.bcn-list-links').on('click', function () {
-      var clicked = $(this).text();
-      console.log(clicked);
-
+      var wikiElem = $('#wikipedia-tab');
       var wikiURL = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=';
-      var searchTerm = clicked;
       var callback = '&prop=revisions&rvprop=content&format=json&callback=?';
-      wikiURL = wikiURL + searchTerm + callback;
+      wikiURL = wikiURL + wikiTerm + callback;
 
-// Set the timeout if no response is received.
+      //hide any <p> currently displayed
+      wikiElem.children().hide();
+
+      // Set the timeout if no response is received.
       var wikiRequestTimeout = setTimeout(function () {
-        $wikiElem.text('Bummer! No results could be found to match that address...:-(');
+        wikiElem.text('Bummer! No results could be found to match that address...:-(');
       }, 5000);
 
 
@@ -33,24 +28,25 @@
         success: function (response) {
           console.log(response);
 
-          var wikiTitles = response[1];
-          var wikiLinks = response[3];
+          var wikiTitle = response[1][0];
+          var wikiLink = response[3][0];
+          var wikiContent = response[2][0];
+          var wikiDisplay =
+            '<h3>' + wikiTitle + '</h3>' +
+            '<p>' + wikiContent + '</p>' +
+            '<a href="' + wikiLink + '" target="_blank">Read more on Wikipedia...</a>';
 
-          for (var i = 0; i < wikiTitles.length; i++) {
-            var wikiTitle = wikiTitles[i];
-            var wikiLink = wikiLinks[i];
-            $wikiElem.append('<li>' +
-              '<a href="' + wikiLink + '">' + wikiTitle + '</a>' +
-              '</li>');
-          }
-          ;
+
+          wikiElem.append(wikiDisplay);
+
 
           clearTimeout(wikiRequestTimeout);
         }
       });
+    };
 
 
-    });
+
 
 
     /*

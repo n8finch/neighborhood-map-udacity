@@ -610,6 +610,7 @@ header.navigation .search-bar form button[type=submit] img {
   display: none;
   padding: 1.5em 1.618em;
   width: 100%;
+  color: white;
 }
 @media screen and (min-width: 40em) {
   .accordion-tabs-minimal .tab-content {
