@@ -6,7 +6,8 @@
      * Build the map
      */
 
-    initMap();
+    // initMap();
+    ko.applyBindings(new ViewModel());
 
     /**
      * Draw the markers and info windows
