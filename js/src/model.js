@@ -2,22 +2,23 @@
  * Contains the Model Data for the app
  */
 
+var base =   {
+  name: 'Barcelona',
+  lat: 41.3907242,
+  lon: 2.1773645,
+  info: 'Barcelona is a nice place!',
+  wiki: 'barcelona',
+  foursquare: 'barcelona2'
+};
+
 var bcnArr = [
-  {
-    name: 'Barcelona',
-    lat: 41.3907242,
-    lon: 2.1773645,
-    info: 'Barcelona is a nice place!',
-    wiki: 'barcelona',
-    foursquare: 'barcelona2'
-  },
   {
     name: 'Sagrada Familia',
     lat: 41.403123,
     lon: 2.173728,
     info: 'Sagrada Familia is a nice place!',
-    wiki: 'sagrada familia',
-    foursquare: 'barcelona2'
+    wiki: 'sagrada familia'
+
   },
   {
     name: 'Parc Güell',

@@ -2,22 +2,23 @@
  * Contains the Model Data for the app
  */
 
+var base =   {
+  name: 'Barcelona',
+  lat: 41.3907242,
+  lon: 2.1773645,
+  info: 'Barcelona is a nice place!',
+  wiki: 'barcelona',
+  foursquare: 'barcelona2'
+};
+
 var bcnArr = [
-  {
-    name: 'Barcelona',
-    lat: 41.3907242,
-    lon: 2.1773645,
-    info: 'Barcelona is a nice place!',
-    wiki: 'barcelona',
-    foursquare: 'barcelona2'
-  },
   {
     name: 'Sagrada Familia',
     lat: 41.403123,
     lon: 2.173728,
     info: 'Sagrada Familia is a nice place!',
-    wiki: 'sagrada familia',
-    foursquare: 'barcelona2'
+    wiki: 'sagrada familia'
+
   },
   {
     name: 'Parc Güell',
@@ -116,10 +117,11 @@ var ViewModel = function () {
         title: item.name,
         info: item.info,
         wiki: item.wiki,
-        foursquare: item.foursquare,
+        foursquare: item.lat + ',' + item.lon,
         /**if the location on the list is clicked than the info window of the marker will appear-**/
         listClick: function (thisMarker) {
           ajaxWiki(marker.wiki);
+          ajaxFourSquare(marker.foursquare);
           infowindow.setContent(thisMarker.info);
           infowindow.open(map, thisMarker);
         }
@@ -130,6 +132,7 @@ var ViewModel = function () {
 
         //load the ajax call on a
         ajaxWiki(marker.wiki);
+        ajaxFourSquare(marker.foursquare);
 
         /*if the animation is allready active, clicking again will stop it*/
         if (marker.getAnimation() == null) {
@@ -226,40 +229,60 @@ var baseLon = base.lon;
 
 
           clearTimeout(wikiRequestTimeout);
+        }, error: function (response) {
+          /*callback function if error - an alert will be activaded to notify the user of the error*/
+          alert("Could not load data from wikipedia!");
         }
       });
     };
-
-
-
 
 
     /*
      * Get Foursquare Data
      */
 
-    var CLIENT_ID_Foursquare = '2EE11MHVU5MQHXAS4YNOTYW3WO4OLJOA0DU5OKLET1VRHNXF';
-    var CLIENT_SECRET_Foursquare = 'SJYX3UAEK3HNWLRPCO4CMYWAQWLYLDAYWYHSMCBDCC3WQKYT';
-    /**creating all the markers on the map**/
+    ajaxFourSquare = function (data) {
+
+      var CLIENT_ID_Foursquare = '2EE11MHVU5MQHXAS4YNOTYW3WO4OLJOA0DU5OKLET1VRHNXF';
+      var CLIENT_SECRET_Foursquare = 'SJYX3UAEK3HNWLRPCO4CMYWAQWLYLDAYWYHSMCBDCC3WQKYT';
+      /**creating all the markers on the map**/
 
 
-    /*Foursquare api ajax request*/
-// $.ajax({
-//   type: "GET",
-//   dataType: 'json',
-//   cache: false,
-//   url: 'https://api.foursquare.com/v2/venues/explore',
-//   data: 'limit=1&ll=' + '22.277291' + ',' + '114.169230' + '&query=' + 'The Butchers Club Burgers' + '&client_id=' + CLIENT_ID_Foursquare + '&client_secret=' + CLIENT_SECRET_Foursquare + '&v=20140806&m=foursquare',
-//   async: true,
-//   success: function (data) {
-//
-//     console.log(data);
-//   },
-//   error: function (data) {
-//     /*callback function if error - an alert will be activaded to notify the user of the error*/
-//     alert("Could not load data from foursquare!");
-//   }
-// });
+      /*Foursquare api ajax request*/
+      $.ajax({
+        type: "GET",
+        dataType: 'json',
+        cache: false,
+        url: 'https://api.foursquare.com/v2/venues/explore?',
+        data: 'limit=5&ll=' + data + '&radius=5000&venuePhotos=1&client_id=' + CLIENT_ID_Foursquare + '&client_secret=' + CLIENT_SECRET_Foursquare + '&v=20140806&m=foursquare',
+        async: true,
+        success: function (response) {
+          var responseArr = response.response.groups[0].items;
+          console.log(responseArr);
+
+          for (var i = 0; i < responseArr.length; i++) {
+            var title, content, photosArr, photoURL, url;
+            var self = responseArr[i];
+
+            title = self.venue.name;
+            content = self.tips[0].text;
+            photosArr = self.venue.photos.groups[0].items[0];
+            photoURL = photosArr.prefix + '100x100' + photosArr.suffix;
+            url = self.tips[0].canonicalUrl;
+
+            console.log(title, content, photosArr, photoURL, url);
+
+          }
+
+
+        },
+        error: function (response) {
+          /*callback function if error - an alert will be activaded to notify the user of the error*/
+          alert("Could not load data from foursquare!");
+        }
+      });
+
+    };
 
 
     /**

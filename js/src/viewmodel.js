@@ -25,10 +25,11 @@ var ViewModel = function () {
         title: item.name,
         info: item.info,
         wiki: item.wiki,
-        foursquare: item.foursquare,
+        foursquare: item.lat + ',' + item.lon,
         /**if the location on the list is clicked than the info window of the marker will appear-**/
         listClick: function (thisMarker) {
           ajaxWiki(marker.wiki);
+          ajaxFourSquare(marker.foursquare);
           infowindow.setContent(thisMarker.info);
           infowindow.open(map, thisMarker);
         }
@@ -39,6 +40,7 @@ var ViewModel = function () {
 
         //load the ajax call on a
         ajaxWiki(marker.wiki);
+        ajaxFourSquare(marker.foursquare);
 
         /*if the animation is allready active, clicking again will stop it*/
         if (marker.getAnimation() == null) {
