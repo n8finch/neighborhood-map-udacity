@@ -31,6 +31,7 @@
     display: block;
     padding: ($base-spacing / 2) $gutter;
     text-decoration: none;
+    border-radius: 3px 3px 0 0;
 
     @include media($tab-mode) {
       border-top: 0;
@@ -52,6 +53,7 @@
         border: $tab-border;
         border-bottom-color: $tab-active-background;
         margin-bottom: -1px;
+        margin-top: 10px;
       }
     }
   }
@@ -64,6 +66,7 @@
 
     @include media($tab-mode) {
       border-top: $tab-border;
+      border-left: $tab-border;
       float: left;
     }
   }

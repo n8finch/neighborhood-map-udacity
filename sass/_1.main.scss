@@ -2,6 +2,21 @@
  * Info Panel Header
  */
 
+body {
+  background-color: #333;
+}
+
+a {
+  color: rgb(21, 192, 108);
+}
+
+h1 {
+  color: white;
+  font-size: 36px;
+  float: right;
+  margin: 5px 10px 0 0;
+}
+
 .sliding-panel-content {
   .navigation-wrapper {
     h2 {
@@ -11,5 +26,32 @@
     }
   }
 }
+
+#advertising {
+  float: left;
+  margin: 10px;
+}
+
+#info-tabs-section {
+  height: calc(50vh - 60px) ;
+  overflow: auto;
+  padding-left: 15px;
+
+  .foursquare-item {
+
+    clear: both;
+    display: block;
+    float: left;
+    margin: 10px;
+
+    img {
+      float: left;
+      margin: 0 10px;
+    }
+  }
+}
+
+
+
 
 

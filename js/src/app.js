@@ -3,45 +3,23 @@
   $(document).ready(function () {
 
     /**
-     * Build the map
+     * Apply the ViewModel bindings, build the map, start the app up.
+     *
+     * Nothing displays without this!
      */
 
-    // initMap();
     ko.applyBindings(new ViewModel());
 
     /**
-     * Draw the markers and info windows
+     * Load initial info about Barcelona in the tabs section
      */
 
-    for (var i = 1; i < bcnArr.length; i++) {
+    //Get latitude and longitude from the base array.
+    var baseLatLon = base.lat + ',' + base.lon;
 
-      var self = bcnArr[i];
-      var currentName = self.name;
-      var currentLatLon = {lat: self.lat, lng: self.lon};
-      var windowInfo = self.info;
-
-      createMarker(currentLatLon, currentName, windowInfo);
-
-    }
-    
-
-
-    /**
-     * Build the List from the BCN Array
-     */
-
-
-    buildBCNList(bcnArr);
-
-
-    /**
-     * Get the Wikipedia Articles
-     */
-
-
-    /**
-     * Get Four Square Data
-     */
+    //Make initial calls to Wikipedia and Foursquare for Barcelona information.
+    ajaxFourSquare(baseLatLon);
+    ajaxWiki(base.wiki);
 
 
   });
