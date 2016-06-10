@@ -16,7 +16,7 @@ var bcnArr = [
     name: 'Sagrada Familia',
     lat: 41.403123,
     lon: 2.173728,
-    info: 'Sagrada Familia is a nice place!',
+    info: 'A must see! This is Gaudi\'s enduring legacy, still under construction.',
     wiki: 'sagrada familia'
 
   },
@@ -24,33 +24,29 @@ var bcnArr = [
     name: 'Parc Güell',
     lat: 41.413610,
     lon: 2.153136,
-    info: 'Parc Güell is a nice place!',
-    wiki: 'parc güell',
-    foursquare: 'barcelona2'
+    info: 'An amazing place to walk around, mystical, and, unless things have changed, free to the public!',
+    wiki: 'parc güell'
   },
   {
     name: 'L\'Ovella Negra',
     lat: 41.3831457,
     lon: 2.1682898,
-    info: 'L\'Ovella Negra is a nice place!',
-    wiki: 'el raval',
-    foursquare: 'barcelona2'
+    info: 'This is the best place to get sangria in... all Spain!',
+    wiki: 'el raval'
   },
   {
     name: 'Bon Mercat Roasters',
     lat: 41.3835709,
     lon: 2.1777242,
-    info: 'Bon Mercat Roasters is a nice place!',
-    wiki: 'gothic quarter barcelona',
-    foursquare: 'barcelona2'
+    info: 'This is the best coffee and drinking chocolate in Barcelona, and probably the world.',
+    wiki: 'gothic quarter barcelona'
   },
   {
     name: 'La Boqueria',
     lat: 41.3813886,
     lon: 2.1718393,
-    info: 'Mercado de la Boqueria is a nice place!',
-    wiki: 'la rambla barcelona',
-    foursquare: 'barcelona2'
+    info: 'This is the classic outdoor market place, fresh fruits, food stands, etc. So fun!',
+    wiki: 'la rambla barcelona'
   }
 ];
 
@@ -90,17 +86,28 @@ $('.accordion-tabs-minimal').on('click', 'li > a.tab-link', function(event) {
 
 
 
+/**
+ * The engine making everything run.
+ *
+ * The ViewModel creates the
+ *
+ */
+
+
 var ViewModel = function () {
 
   var self = this;
-  /**the array of visible markers is the one the will be displayed on the mapl and in the list of resturants**/
+  //this array is displayed on the map and in the list of locations in the menu
   self.markersVisible = ko.observableArray([]);
-  /**the array of markers will save all the locations - the ones that are displayed and the ones that are not displyed**/
+  //this array saves all the locations displayed and not displayed
   self.markersMap = ko.observableArray([]);
+  //this array keeps the info window information and binds it to the
   self.infoWindows = ko.observableArray([]);
+  //create the observable for the filtering list on the menu
+  self.filterList = ko.observable('');
 
   function initialize() {
-    /**creation of the map**/
+    //create the map
     map = new google.maps.Map(document.getElementById('map_canvas'), {
       zoom: 13,
       center: new google.maps.LatLng(base.lat, base.lon)
@@ -108,7 +115,7 @@ var ViewModel = function () {
     var infowindow = new google.maps.InfoWindow({});
 
 
-    /**creating all the markers on the map**/
+    //push all the markers on the map to the observable arrays
     bcnArr.forEach(function (item) {
       /*creation of new markers*/
       var marker = new google.maps.Marker({
@@ -120,8 +127,10 @@ var ViewModel = function () {
         foursquare: item.lat + ',' + item.lon,
         /**if the location on the list is clicked than the info window of the marker will appear-**/
         listClick: function (thisMarker) {
-          ajaxWiki(marker.wiki);
+
+          //make ajax calls on menu item clicks
           ajaxFourSquare(marker.foursquare);
+          ajaxWiki(marker.wiki);
           infowindow.setContent(thisMarker.info);
           infowindow.open(map, thisMarker);
         }
@@ -130,11 +139,11 @@ var ViewModel = function () {
       self.markersMap.push(marker);
       marker.addListener('click', function () {
 
-        //load the ajax call on a
-        ajaxWiki(marker.wiki);
+        //load the ajax call marker clicks
         ajaxFourSquare(marker.foursquare);
+        ajaxWiki(marker.wiki);
 
-        /*if the animation is allready active, clicking again will stop it*/
+        //add animation to map markers
         if (marker.getAnimation() == null) {
           marker.setAnimation(google.maps.Animation.BOUNCE);
           setTimeout(function () {
@@ -151,17 +160,17 @@ var ViewModel = function () {
 
   }
 
-  self.filterList = ko.observable('');
 
+  //subscribe the filterList to any changes made in the input box on the menu.
   self.filterList.subscribe(function (value) {
-    /**mark all markers as invisible and remove them from the visible markers list**/
+    //make all markers as hidden and remove them from the visible markers menu list
     self.markersMap().forEach(function (item) {
       item.setVisible(false);
       self.markersVisible.remove(item);
     });
     self.markersMap().forEach(function (item) {
       if (item.title.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-        /**if the place is relevant to the search, make the marker visible and add the marker to the visible markers list**/
+        //if the location is relevant to the search, make the marker and list item visible
         item.setVisible(true);
         self.markersVisible.push(item);
       }
@@ -186,110 +195,132 @@ var baseLon = base.lon;
 
 
 
-(function ($) {
-  $(document).ready(function () {
-
-    /**
-     * Wikipedia API Call
-     */
-
-
-    ajaxWiki = function (wikiTerm) {
-
-      var wikiElem = $('#wikipedia-tab');
-      var wikiURL = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=';
-      var callback = '&prop=revisions&rvprop=content&format=json&callback=?';
-      wikiURL = wikiURL + wikiTerm + callback;
-
-      //hide any <p> currently displayed
-      wikiElem.children().hide();
-
-      // Set the timeout if no response is received.
-      var wikiRequestTimeout = setTimeout(function () {
-        wikiElem.text('Bummer! No results could be found to match that address...:-(');
-      }, 5000);
+/**
+ * API Calls
+ *
+ * These are functions that serve two purposes:
+ * 1. Make calls to 3rd party APIs
+ * 2. Modify the DOM with the information in the callback.
+ */
 
 
-      $.ajax({
-        url: wikiURL,
-        dataType: 'json',
-        success: function (response) {
-          console.log(response);
-
-          var wikiTitle = response[1][0];
-          var wikiLink = response[3][0];
-          var wikiContent = response[2][0];
-          var wikiDisplay =
-            '<h3>' + wikiTitle + '</h3>' +
-            '<p>' + wikiContent + '</p>' +
-            '<a href="' + wikiLink + '" target="_blank">Read more on Wikipedia...</a>';
+/**
+ * Wikipedia API Call
+ */
 
 
-          wikiElem.append(wikiDisplay);
+ajaxWiki = function (wikiTerm) {
+
+  // ID of the element we will modify
+  var wikiElem = $('#wikipedia-tab');
+
+  //Build the URL and Callback for the jax request
+  var wikiURL = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=';
+  var callback = '&prop=revisions&rvprop=content&format=json&callback=?';
+  wikiURL = wikiURL + wikiTerm + callback;
+
+  //hide any <p> currently displayed
+  wikiElem.children().fadeOut(1000);
+
+  // Set the timeout if no response is received.
+  var wikiRequestTimeout = setTimeout(function () {
+    wikiElem.text('Bummer! No results could be found to match that address...:-(');
+  }, 5000);
 
 
-          clearTimeout(wikiRequestTimeout);
-        }, error: function (response) {
-          /*callback function if error - an alert will be activaded to notify the user of the error*/
-          alert("Could not load data from wikipedia!");
-        }
-      });
-    };
+  $.ajax({
+    url: wikiURL,
+    dataType: 'json',
+    success: function (response) {
+
+      //Assign Responses from Wikipedia to variables for building elements
+      var wikiTitle = response[1][0];
+      var wikiLink = response[3][0];
+      var wikiContent = response[2][0];
+      var wikiDisplay =
+        '<h3>' + wikiTitle + '</h3>' +
+        '<p>' + wikiContent + '</p>' +
+        '<a href="' + wikiLink + '" target="_blank">Read more on Wikipedia...</a>';
 
 
-    /*
-     * Get Foursquare Data
-     */
-
-    ajaxFourSquare = function (data) {
-
-      var CLIENT_ID_Foursquare = '2EE11MHVU5MQHXAS4YNOTYW3WO4OLJOA0DU5OKLET1VRHNXF';
-      var CLIENT_SECRET_Foursquare = 'SJYX3UAEK3HNWLRPCO4CMYWAQWLYLDAYWYHSMCBDCC3WQKYT';
-      /**creating all the markers on the map**/
+      wikiElem.append(wikiDisplay);
 
 
-      /*Foursquare api ajax request*/
-      $.ajax({
-        type: "GET",
-        dataType: 'json',
-        cache: false,
-        url: 'https://api.foursquare.com/v2/venues/explore?',
-        data: 'limit=5&ll=' + data + '&radius=5000&venuePhotos=1&client_id=' + CLIENT_ID_Foursquare + '&client_secret=' + CLIENT_SECRET_Foursquare + '&v=20140806&m=foursquare',
-        async: true,
-        success: function (response) {
-          var responseArr = response.response.groups[0].items;
-          console.log(responseArr);
-
-          for (var i = 0; i < responseArr.length; i++) {
-            var title, content, photosArr, photoURL, url;
-            var self = responseArr[i];
-
-            title = self.venue.name;
-            content = self.tips[0].text;
-            photosArr = self.venue.photos.groups[0].items[0];
-            photoURL = photosArr.prefix + '100x100' + photosArr.suffix;
-            url = self.tips[0].canonicalUrl;
-
-            console.log(title, content, photosArr, photoURL, url);
-
-          }
+      clearTimeout(wikiRequestTimeout);
+    }, error: function (response) {
+      //callback function if error - an alert will be activated to notify the user of the error
+      alert("Could not load data from wikipedia!");
+    }
+  });
+};
 
 
-        },
-        error: function (response) {
-          /*callback function if error - an alert will be activaded to notify the user of the error*/
-          alert("Could not load data from foursquare!");
-        }
-      });
+/*
+ * Get Foursquare Data
+ */
 
-    };
+ajaxFourSquare = function (data) {
+
+  // ID of the element we will modify
+  var foursquareElem = $('#foursquare-tab');
+
+  //API Keys
+  var CLIENT_ID_Foursquare = '2EE11MHVU5MQHXAS4YNOTYW3WO4OLJOA0DU5OKLET1VRHNXF';
+  var CLIENT_SECRET_Foursquare = 'SJYX3UAEK3HNWLRPCO4CMYWAQWLYLDAYWYHSMCBDCC3WQKYT';
 
 
-    /**
-     * Get Hotwire calls
-     */
+  //hide any <div> currently displayed
+  foursquareElem.children().fadeOut(1000);
 
-// $.ajax({
+  $.ajax({
+    type: "GET",
+    dataType: 'json',
+    cache: false,
+    url: 'https://api.foursquare.com/v2/venues/explore?',
+    data: 'limit=5&ll=' + data + '&radius=5000&venuePhotos=1&client_id=' + CLIENT_ID_Foursquare + '&client_secret=' + CLIENT_SECRET_Foursquare + '&v=20140806&m=foursquare',
+    async: true,
+    success: function (response) {
+      var responseArr = response.response.groups[0].items;
+
+      for (var i = 0; i < responseArr.length; i++) {
+        var title, content, photosArr, photoURL, url;
+        var self = responseArr[i];
+
+        title = self.venue.name;
+        content = self.tips[0].text;
+        photosArr = self.venue.photos.groups[0].items[0];
+        photoURL = photosArr.prefix + '100x100' + photosArr.suffix;
+        url = self.tips[0].canonicalUrl;
+
+        var foursquareDisplay =
+          '<div class="foursquare-item">' +
+          '<img src="' + photoURL + '" alt=""/>' +
+          '<h3>' + title + '</h3>' +
+          '<p>' + content + '</p>' +
+          '<a href="' + url + '" target="_blank">Read more on FourSquare...</a>' +
+          '</div>';
+
+
+        foursquareElem.append(foursquareDisplay).hide().fadeIn(700);
+
+      }
+
+
+    },
+    error: function (response) {
+      //callback function if error - an alert will be activated to notify the user of the error
+      alert("Could not load data from foursquare!");
+    }
+  });
+
+};
+
+
+/**
+ * Get Hotwire calls
+ */
+
+// ajaxHotwire = function({
 //   type: "GET",
 //   cache: false,
 //   url: 'http://api.hotwire.com/v1/deal/hotel?&apikey=5dpykaswx6td8dg75ghcwnjt&dest=barcelona&limit=1&callback=',
@@ -299,12 +330,10 @@ var baseLon = base.lon;
 //     console.log(data);
 //   },
 //   error: function (data) {
-//     /*callback function if error - an alert will be activaded to notify the user of the error*/
 //     alert("Could not load data from foursquare!");
 //   }
 // });
-  });
-}(jQuery));
+
 
 
 
@@ -314,45 +343,23 @@ var baseLon = base.lon;
   $(document).ready(function () {
 
     /**
-     * Build the map
+     * Apply the ViewModel bindings, build the map, start the app up.
+     *
+     * Nothing displays without this!
      */
 
-    // initMap();
     ko.applyBindings(new ViewModel());
 
     /**
-     * Draw the markers and info windows
+     * Load initial info about Barcelona in the tabs section
      */
 
-    for (var i = 1; i < bcnArr.length; i++) {
+    //Get latitude and longitude from the base array.
+    var baseLatLon = base.lat + ',' + base.lon;
 
-      var self = bcnArr[i];
-      var currentName = self.name;
-      var currentLatLon = {lat: self.lat, lng: self.lon};
-      var windowInfo = self.info;
-
-      createMarker(currentLatLon, currentName, windowInfo);
-
-    }
-    
-
-
-    /**
-     * Build the List from the BCN Array
-     */
-
-
-    buildBCNList(bcnArr);
-
-
-    /**
-     * Get the Wikipedia Articles
-     */
-
-
-    /**
-     * Get Four Square Data
-     */
+    //Make initial calls to Wikipedia and Foursquare for Barcelona information.
+    ajaxFourSquare(baseLatLon);
+    ajaxWiki(base.wiki);
 
 
   });

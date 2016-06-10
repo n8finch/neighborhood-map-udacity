@@ -1,14 +1,25 @@
+/**
+ * The engine making everything run.
+ *
+ * The ViewModel creates the
+ *
+ */
+
+
 var ViewModel = function () {
 
   var self = this;
-  /**the array of visible markers is the one the will be displayed on the mapl and in the list of resturants**/
+  //this array is displayed on the map and in the list of locations in the menu
   self.markersVisible = ko.observableArray([]);
-  /**the array of markers will save all the locations - the ones that are displayed and the ones that are not displyed**/
+  //this array saves all the locations displayed and not displayed
   self.markersMap = ko.observableArray([]);
+  //this array keeps the info window information and binds it to the
   self.infoWindows = ko.observableArray([]);
+  //create the observable for the filtering list on the menu
+  self.filterList = ko.observable('');
 
   function initialize() {
-    /**creation of the map**/
+    //create the map
     map = new google.maps.Map(document.getElementById('map_canvas'), {
       zoom: 13,
       center: new google.maps.LatLng(base.lat, base.lon)
@@ -16,7 +27,7 @@ var ViewModel = function () {
     var infowindow = new google.maps.InfoWindow({});
 
 
-    /**creating all the markers on the map**/
+    //push all the markers on the map to the observable arrays
     bcnArr.forEach(function (item) {
       /*creation of new markers*/
       var marker = new google.maps.Marker({
@@ -28,8 +39,10 @@ var ViewModel = function () {
         foursquare: item.lat + ',' + item.lon,
         /**if the location on the list is clicked than the info window of the marker will appear-**/
         listClick: function (thisMarker) {
-          ajaxWiki(marker.wiki);
+
+          //make ajax calls on menu item clicks
           ajaxFourSquare(marker.foursquare);
+          ajaxWiki(marker.wiki);
           infowindow.setContent(thisMarker.info);
           infowindow.open(map, thisMarker);
         }
@@ -38,11 +51,11 @@ var ViewModel = function () {
       self.markersMap.push(marker);
       marker.addListener('click', function () {
 
-        //load the ajax call on a
-        ajaxWiki(marker.wiki);
+        //load the ajax call marker clicks
         ajaxFourSquare(marker.foursquare);
+        ajaxWiki(marker.wiki);
 
-        /*if the animation is allready active, clicking again will stop it*/
+        //add animation to map markers
         if (marker.getAnimation() == null) {
           marker.setAnimation(google.maps.Animation.BOUNCE);
           setTimeout(function () {
@@ -59,17 +72,17 @@ var ViewModel = function () {
 
   }
 
-  self.filterList = ko.observable('');
 
+  //subscribe the filterList to any changes made in the input box on the menu.
   self.filterList.subscribe(function (value) {
-    /**mark all markers as invisible and remove them from the visible markers list**/
+    //make all markers as hidden and remove them from the visible markers menu list
     self.markersMap().forEach(function (item) {
       item.setVisible(false);
       self.markersVisible.remove(item);
     });
     self.markersMap().forEach(function (item) {
       if (item.title.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-        /**if the place is relevant to the search, make the marker visible and add the marker to the visible markers list**/
+        //if the location is relevant to the search, make the marker and list item visible
         item.setVisible(true);
         self.markersVisible.push(item);
       }
