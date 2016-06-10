@@ -497,11 +497,11 @@ header.navigation .search-bar form button[type=submit] img {
   bottom: 0;
   left: 0;
   height: 100%;
-  width: 50vw;
+  width: 260px;
   background: #404040;
   -webkit-overflow-scrolling: touch;
   overflow-y: auto;
-  transform: translateX(-50vw);
+  transform: translateX(-260px);
   transition: all 0.5s linear;
   z-index: 999999;
 }
@@ -554,6 +554,8 @@ header.navigation .search-bar form button[type=submit] img {
   outline: none;
   padding: 10px 16px;
   position: relative;
+  margin-top: 10px;
+  margin-left: 10px;
 }
 .sliding-panel-button img {
   height: 1.3em;
@@ -583,6 +585,7 @@ header.navigation .search-bar form button[type=submit] img {
   display: block;
   padding: 0.75em 1.618em;
   text-decoration: none;
+  border-radius: 3px 3px 0 0;
 }
 @media screen and (min-width: 40em) {
   .accordion-tabs-minimal .tab-link {
@@ -604,6 +607,7 @@ header.navigation .search-bar form button[type=submit] img {
     border: 1px solid #ddd;
     border-bottom-color: #fff;
     margin-bottom: -1px;
+    margin-top: 10px;
   }
 }
 .accordion-tabs-minimal .tab-content {
@@ -615,12 +619,13 @@ header.navigation .search-bar form button[type=submit] img {
 @media screen and (min-width: 40em) {
   .accordion-tabs-minimal .tab-content {
     border-top: 1px solid #ddd;
+    border-left: 1px solid #ddd;
     float: left;
   }
 }
 
 #map_canvas {
-  height: calc(100vh - 60px);
+  height: calc(60vh - 60px);
   width: 100%;
 }
 
@@ -647,10 +652,46 @@ header.navigation .search-bar form button[type=submit] img {
 /*
  * Info Panel Header
  */
+body {
+  background-color: #333;
+}
+
+a {
+  color: #15c06c;
+}
+
+h1 {
+  color: white;
+  font-size: 36px;
+  float: right;
+  margin: 5px 10px 0 0;
+}
+
 .sliding-panel-content .navigation-wrapper h2 {
   float: left;
   padding: 20px;
   color: white;
+}
+
+#advertising {
+  float: left;
+  margin: 10px;
+}
+
+#info-tabs-section {
+  height: calc(50vh - 60px);
+  overflow: auto;
+  padding-left: 15px;
+}
+#info-tabs-section .foursquare-item {
+  clear: both;
+  display: block;
+  float: left;
+  margin: 10px;
+}
+#info-tabs-section .foursquare-item img {
+  float: left;
+  margin: 0 10px;
 }
 
 /*# sourceMappingURL=style.css.map */
