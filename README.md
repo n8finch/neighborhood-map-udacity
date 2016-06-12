@@ -20,6 +20,17 @@ To install `node_modules` and `bower_components`:
 3. Run `bower install` to install and update all `bower_components`.
 
 
+## How to Use This App
+
+I get a lot of friends and family asking me for Barcelona recommendations. So, I thought I'd put this together.  
+
+1. Start by opening `index.html` in your browser of choice.
+2. Once the map and markers are loaded, you can click and filter in a few different places. 
+3. Use filter box in the menu to filter list items and map markers to display only what you're searching for.
+4. Click on a list item or map marker to open an info window describing why I like this place and any tips I might have.
+5. You'll notice that several other pieces of information pop up in the tabs below. This is information from Foursquare and Wikipedia. You can follow those links to learn more about the location or the area the location is in. 
+6. Once you're done with the map, you can close the window. 
+
 ## To Add More Locations
 
 1. Open the `model.js` file in the `js/src` directory.

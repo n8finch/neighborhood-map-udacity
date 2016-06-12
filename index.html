@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name=viewport content="width=device-width, initial-scale=1">
     <title>Nate's Barcelona Recommendations</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
@@ -84,11 +85,16 @@
         </li>
     </ul>
 </div>
-
-
-
-
-<script src="https://maps.googleapis.com/maps/api/js"></script>
+<script>
+    function googleSuccess() {
+        if (!google) {
+            alert("Could not load data from Google Maps!")
+        } else {
+            ko.applyBindings(new ViewModel());
+        }
+    }
+</script>
+<script async src="https://maps.googleapis.com/maps/api/js?googleSuccess"></script>
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/knockout/dist/knockout.js"></script>
 <script src="js/js.js"></script>
