@@ -85,16 +85,18 @@
         </li>
     </ul>
 </div>
+
 <script>
-    function googleSuccess() {
-        if (!google) {
-            alert("Could not load data from Google Maps!")
-        } else {
-            ko.applyBindings(new ViewModel());
-        }
-    }
+    var googleError = function() {
+        alert('google API not loading');
+    };
+    var googleSuccess = function() {
+        ko.applyBindings(new ViewModel());
+
+    };
 </script>
-<script async src="https://maps.googleapis.com/maps/api/js?googleSuccess"></script>
+
+<script async src="https://maps.googleapis.com/maps/api/js?callback=googleSuccess" onerror="googleError()"></script>
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/knockout/dist/knockout.js"></script>
 <script src="js/js.js"></script>

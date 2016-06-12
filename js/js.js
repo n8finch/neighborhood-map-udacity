@@ -348,7 +348,7 @@ ajaxFourSquare = function (data) {
      * Nothing displays without this!
      */
 
-    ko.applyBindings(new ViewModel());
+    // ko.applyBindings(new ViewModel());
 
     /**
      * Load initial info about Barcelona in the tabs section
