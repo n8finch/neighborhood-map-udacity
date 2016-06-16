@@ -52,7 +52,10 @@ ajaxWiki = function (wikiTerm) {
       clearTimeout(wikiRequestTimeout);
     }, error: function (response) {
       //callback function if error - an alert will be activated to notify the user of the error
-      alert("Could not load data from wikipedia!");
+      var wikiDisplay =
+        '<p>Bummer!... Could not load data from Wikipedia! Make sure you are connected to the Internet, or try again later.</p>';
+
+      wikiElem.append(wikiDisplay);
     }
   });
 };
@@ -112,7 +115,10 @@ ajaxFourSquare = function (data) {
     },
     error: function (response) {
       //callback function if error - an alert will be activated to notify the user of the error
-      alert("Could not load data from foursquare!");
+      var foursquareDisplay =
+        '<p>Bummer!... Could not load data from Foursquare! Make sure you are connected to the Internet, or try again later.</p>';
+
+      foursquareElem.append(foursquareDisplay);
     }
   });
 
