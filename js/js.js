@@ -293,7 +293,7 @@ ajaxFourSquare = function (data) {
         var self = responseArr[i];
 
         title = self.venue.name;
-        content = self.tips[0].text;
+        content = self.tips[0].text ? self.tips[0].text : "No tips here!";
         photosArr = self.venue.photos.groups[0].items[0];
         photoURL = photosArr.prefix + '100x100' + photosArr.suffix;
         url = self.tips[0].canonicalUrl;
