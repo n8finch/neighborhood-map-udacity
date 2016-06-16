@@ -33,8 +33,9 @@ ajaxWiki = function (wikiTerm) {
 
   $.ajax({
     url: wikiURL,
-    dataType: 'json',
-    success: function (response) {
+    dataType: 'json'
+    })
+    .done( function (response) {
 
       //Assign Responses from Wikipedia to variables for building elements
       var wikiTitle = response[1][0];
@@ -50,14 +51,15 @@ ajaxWiki = function (wikiTerm) {
 
 
       clearTimeout(wikiRequestTimeout);
-    }, error: function (response) {
+    })
+    .fail( function (response) {
       //callback function if error - an alert will be activated to notify the user of the error
       var wikiDisplay =
         '<p>Bummer!... Could not load data from Wikipedia! Make sure you are connected to the Internet, or try again later.</p>';
 
       wikiElem.append(wikiDisplay);
-    }
-  });
+    });
+
 };
 
 
@@ -84,8 +86,9 @@ ajaxFourSquare = function (data) {
     cache: false,
     url: 'https://api.foursquare.com/v2/venues/explore?',
     data: 'limit=5&ll=' + data + '&radius=5000&venuePhotos=1&client_id=' + CLIENT_ID_Foursquare + '&client_secret=' + CLIENT_SECRET_Foursquare + '&v=20140806&m=foursquare',
-    async: true,
-    success: function (response) {
+    async: true
+  })
+    .done ( function (response) {
       var responseArr = response.response.groups[0].items;
 
       for (var i = 0; i < responseArr.length; i++) {
@@ -112,15 +115,15 @@ ajaxFourSquare = function (data) {
       }
 
 
-    },
-    error: function (response) {
+    })
+      .fail( function (response) {
       //callback function if error - an alert will be activated to notify the user of the error
       var foursquareDisplay =
         '<p>Bummer!... Could not load data from Foursquare! Make sure you are connected to the Internet, or try again later.</p>';
 
       foursquareElem.append(foursquareDisplay);
-    }
-  });
+    });
+
 
 };
 
