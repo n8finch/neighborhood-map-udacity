@@ -1,27 +1,20 @@
-(function ($) {
+/**
+ * Apply the ViewModel bindings, build the map, start the app up.
+ *
+ * Nothing displays without this!
+ */
 
-  $(document).ready(function () {
+// ko.applyBindings(new ViewModel());
 
-    /**
-     * Apply the ViewModel bindings, build the map, start the app up.
-     *
-     * Nothing displays without this!
-     */
+/**
+ * Load initial info about Barcelona in the tabs section
+ */
 
-    // ko.applyBindings(new ViewModel());
+//Get latitude and longitude from the base array.
+var baseLatLon = base.lat + ',' + base.lon;
 
-    /**
-     * Load initial info about Barcelona in the tabs section
-     */
-
-    //Get latitude and longitude from the base array.
-    var baseLatLon = base.lat + ',' + base.lon;
-
-    //Make initial calls to Wikipedia and Foursquare for Barcelona information.
-    ajaxFourSquare(baseLatLon);
-    ajaxWiki(base.wiki);
+//Make initial calls to Wikipedia and Foursquare for Barcelona information.
+ajaxFourSquare(baseLatLon);
+ajaxWiki(base.wiki);
 
 
-  });
-
-}(jQuery));
