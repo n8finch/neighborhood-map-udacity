@@ -91,9 +91,12 @@ ajaxFourSquare = function (data) {
     .done ( function (response) {
       var responseArr = response.response.groups[0].items;
 
+      var foursquareDisplay = '';
+
       for (var i = 0; i < responseArr.length; i++) {
         var title, content, photosArr, photoURL, url;
         var self = responseArr[i];
+
 
         title = self.venue.name;
         content = self.tips[0].text ? self.tips[0].text : "No tips here!";
@@ -101,7 +104,7 @@ ajaxFourSquare = function (data) {
         photoURL = photosArr.prefix + '100x100' + photosArr.suffix;
         url = self.tips[0].canonicalUrl;
 
-        var foursquareDisplay =
+        foursquareDisplay +=
           '<div class="foursquare-item">' +
           '<img src="' + photoURL + '" alt=""/>' +
           '<h3>' + title + '</h3>' +
@@ -110,10 +113,13 @@ ajaxFourSquare = function (data) {
           '</div>';
 
 
-        foursquareElem.append(foursquareDisplay).hide().fadeIn(700);
+
 
       }
 
+      // console.log(foursquareDisplay);
+      //foursquareElem.append(foursquareDisplay).hide().fadeIn(700);
+      return foursquareDisplay;
 
     })
       .fail( function (response) {

@@ -39,11 +39,6 @@
                     </li>
                 </ul>
 
-
-
-
-
-
             </nav>
 
             <div class="js-menu-screen sliding-panel-fade-screen"></div>
@@ -67,7 +62,7 @@
     <ul class="accordion-tabs-minimal">
         <li class="tab-header-and-content">
             <a href="#" class="tab-link is-active"><span class="fa fa-location-arrow"></span> What's Around Here</a>
-            <div class="tab-content" id="foursquare-tab">
+            <div data-bind="text: foursquareContent" class="tab-content" id="foursquare-tab">
 
             </div>
         </li>
@@ -80,7 +75,7 @@
         <li class="tab-header-and-content">
             <a href="#" class="tab-link"><span class="fa fa-bed"></span> Lodging Specials</a>
             <div class="tab-content" id="hotwire-tab">
-                <p>Hotwire information will go here, but isn't working yet.</p>
+                <p>Hotwire API for lodging coming soon. Stay tuned...</p>
             </div>
         </li>
     </ul>

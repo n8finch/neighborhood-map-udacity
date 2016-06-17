@@ -105,6 +105,8 @@ var ViewModel = function () {
   self.infoWindows = ko.observableArray([]);
   //create the observable for the filtering list on the menu
   self.filterList = ko.observable('');
+  //create the observable for Foursquare content
+  self.foursquareContent = ko.observable('Init');
 
   function initialize() {
     //create the map
@@ -117,7 +119,8 @@ var ViewModel = function () {
 
     //push all the markers on the map to the observable arrays
     bcnArr.forEach(function (item) {
-      /*creation of new markers*/
+      //creation of new markers
+      // https://developers.google.com/maps/documentation/javascript/markers#animate
       var marker = new google.maps.Marker({
         position: new google.maps.LatLng(item.lat, item.lon),
         map: map,
@@ -125,11 +128,21 @@ var ViewModel = function () {
         info: item.info,
         wiki: item.wiki,
         foursquare: item.lat + ',' + item.lon,
+        animation: google.maps.Animation.BOUNCE,
         /**if the location on the list is clicked than the info window of the marker will appear-**/
         listClick: function (thisMarker) {
 
+          if (marker.getAnimation() == null) {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout(function () {
+              marker.setAnimation(null);
+            }, 4000);
+          } else {
+            marker.setAnimation(null);
+          }
+
           //make ajax calls on menu item clicks
-          ajaxFourSquare(marker.foursquare);
+          self.foursquareContent = ajaxFourSquare(marker.foursquare);
           ajaxWiki(marker.wiki);
           infowindow.setContent(thisMarker.info);
           infowindow.open(map, thisMarker);
@@ -148,7 +161,7 @@ var ViewModel = function () {
           marker.setAnimation(google.maps.Animation.BOUNCE);
           setTimeout(function () {
             marker.setAnimation(null);
-          }, 2000);
+          }, 4000);
         } else {
           marker.setAnimation(null);
         }
@@ -288,9 +301,12 @@ ajaxFourSquare = function (data) {
     .done ( function (response) {
       var responseArr = response.response.groups[0].items;
 
+      var foursquareDisplay = '';
+
       for (var i = 0; i < responseArr.length; i++) {
         var title, content, photosArr, photoURL, url;
         var self = responseArr[i];
+
 
         title = self.venue.name;
         content = self.tips[0].text ? self.tips[0].text : "No tips here!";
@@ -298,7 +314,7 @@ ajaxFourSquare = function (data) {
         photoURL = photosArr.prefix + '100x100' + photosArr.suffix;
         url = self.tips[0].canonicalUrl;
 
-        var foursquareDisplay =
+        foursquareDisplay +=
           '<div class="foursquare-item">' +
           '<img src="' + photoURL + '" alt=""/>' +
           '<h3>' + title + '</h3>' +
@@ -307,10 +323,13 @@ ajaxFourSquare = function (data) {
           '</div>';
 
 
-        foursquareElem.append(foursquareDisplay).hide().fadeIn(700);
+
 
       }
 
+      // console.log(foursquareDisplay);
+      //foursquareElem.append(foursquareDisplay).hide().fadeIn(700);
+      return foursquareDisplay;
 
     })
       .fail( function (response) {

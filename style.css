@@ -698,6 +698,10 @@ h1 {
   #advertising {
     display: none;
   }
+
+  #info-tabs-section {
+    padding-left: 0;
+  }
 }
 @media only screen and (max-width: 710px) {
   h1 {

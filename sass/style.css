@@ -565,7 +565,10 @@ h1 {
 
 @media only screen and (max-width: 1024px) {
   #advertising {
-    display: none; } }
+    display: none; }
+
+  #info-tabs-section {
+    padding-left: 0; } }
 @media only screen and (max-width: 710px) {
   h1 {
     font-size: 20px;

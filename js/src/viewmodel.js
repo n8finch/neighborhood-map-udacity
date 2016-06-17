@@ -17,6 +17,8 @@ var ViewModel = function () {
   self.infoWindows = ko.observableArray([]);
   //create the observable for the filtering list on the menu
   self.filterList = ko.observable('');
+  //create the observable for Foursquare content
+  self.foursquareContent = ko.observable('Init');
 
   function initialize() {
     //create the map
@@ -29,7 +31,8 @@ var ViewModel = function () {
 
     //push all the markers on the map to the observable arrays
     bcnArr.forEach(function (item) {
-      /*creation of new markers*/
+      //creation of new markers
+      // https://developers.google.com/maps/documentation/javascript/markers#animate
       var marker = new google.maps.Marker({
         position: new google.maps.LatLng(item.lat, item.lon),
         map: map,
@@ -37,11 +40,21 @@ var ViewModel = function () {
         info: item.info,
         wiki: item.wiki,
         foursquare: item.lat + ',' + item.lon,
+        animation: google.maps.Animation.BOUNCE,
         /**if the location on the list is clicked than the info window of the marker will appear-**/
         listClick: function (thisMarker) {
 
+          if (marker.getAnimation() == null) {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout(function () {
+              marker.setAnimation(null);
+            }, 4000);
+          } else {
+            marker.setAnimation(null);
+          }
+
           //make ajax calls on menu item clicks
-          ajaxFourSquare(marker.foursquare);
+          self.foursquareContent = ajaxFourSquare(marker.foursquare);
           ajaxWiki(marker.wiki);
           infowindow.setContent(thisMarker.info);
           infowindow.open(map, thisMarker);
@@ -60,7 +73,7 @@ var ViewModel = function () {
           marker.setAnimation(google.maps.Animation.BOUNCE);
           setTimeout(function () {
             marker.setAnimation(null);
-          }, 2000);
+          }, 4000);
         } else {
           marker.setAnimation(null);
         }
