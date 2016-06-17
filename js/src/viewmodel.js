@@ -54,7 +54,8 @@ var ViewModel = function () {
           }
 
           //make ajax calls on menu item clicks
-          self.foursquareContent = ajaxFourSquare(marker.foursquare);
+          console.log('from the viewmodel: ' + ajaxFourSquare(marker.foursquare));
+
           ajaxWiki(marker.wiki);
           infowindow.setContent(thisMarker.info);
           infowindow.open(map, thisMarker);
@@ -65,7 +66,8 @@ var ViewModel = function () {
       marker.addListener('click', function () {
 
         //load the ajax call marker clicks
-        ajaxFourSquare(marker.foursquare);
+        console.log('from the viewmodel: ' + ajaxFourSquare(marker.foursquare));
+
         ajaxWiki(marker.wiki);
 
         //add animation to map markers

@@ -117,7 +117,7 @@ ajaxFourSquare = function (data) {
 
       }
 
-      // console.log(foursquareDisplay);
+      console.log('from the ajax call: ' + foursquareDisplay);
       //foursquareElem.append(foursquareDisplay).hide().fadeIn(700);
       return foursquareDisplay;
 
