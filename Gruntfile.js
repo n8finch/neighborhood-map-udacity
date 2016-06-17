@@ -9,7 +9,7 @@ module.exports = function(grunt) {
           style: 'expanded'
         },
         files: {                         // Dictionary of files
-          'style.css': 'sass/style.scss',       // 'destination': 'source'
+          'dist/styles/style.css': 'sass/style.scss',       // 'destination': 'source'
         }
       }
     },
@@ -19,15 +19,15 @@ module.exports = function(grunt) {
         separator: ''
       },
       dist: {
-        src: ['js/src/model.js', 'bower_components/oauth-signature/dist/oauth-signature.min.js', 'js/src/refills-components.js', 'js/src/viewmodel.js', 'js/src/func-lib.js', 'js/src/ajax-calls.js', 'js/src/app.js'],
-        dest: 'js/js.js'
+        src: ['js/src/model.js', 'js/src/refills-components.js', 'js/src/viewmodel.js', 'js/src/func-lib.js', 'js/src/ajax-calls.js', 'js/src/app.js'],
+        dest: 'dist/js/js.js'
       }
     },
 
     uglify: {
       my_target: {
         files: {
-          'js/js.min.js': ['js/js.js']
+          'dist/js/js.min.js': ['dist/js/js.js']
         }
       }
     },
