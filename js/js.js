@@ -62,7 +62,7 @@ var CryptoJS=CryptoJS||function(a,b){var c={},d=c.lib={},e=function(){},f=d.Base
  * Sliding Panel
  */
 
-$('.sliding-panel-button,.sliding-panel-fade-screen,.sliding-panel-close').on('click touchstart',function (e) {
+$('ul#bcn-list,.sliding-panel-button,.sliding-panel-fade-screen,.sliding-panel-close,.filter-list-elements').on('click',function (e) {
   $('.sliding-panel-content,.sliding-panel-fade-screen').toggleClass('is-visible');
   e.preventDefault();
 });
@@ -128,9 +128,15 @@ var ViewModel = function () {
         info: item.info,
         wiki: item.wiki,
         foursquare: item.lat + ',' + item.lon,
-        animation: google.maps.Animation.BOUNCE,
         /**if the location on the list is clicked than the info window of the marker will appear-**/
         listClick: function (thisMarker) {
+
+          //make ajax calls on menu item clicks
+          console.log('from the viewmodel: ' + ajaxFourSquare(marker.foursquare));
+
+          ajaxWiki(marker.wiki);
+          infowindow.setContent(thisMarker.info);
+          infowindow.open(map, thisMarker);
 
           if (marker.getAnimation() == null) {
             marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -141,12 +147,6 @@ var ViewModel = function () {
             marker.setAnimation(null);
           }
 
-          //make ajax calls on menu item clicks
-          console.log('from the viewmodel: ' + ajaxFourSquare(marker.foursquare));
-
-          ajaxWiki(marker.wiki);
-          infowindow.setContent(thisMarker.info);
-          infowindow.open(map, thisMarker);
         }
       });
       self.markersVisible.push(marker);
@@ -379,6 +379,15 @@ ajaxFourSquare = function (data) {
 /**
  * Load initial info about Barcelona in the tabs section
  */
+
+var googleError = function() {
+  alert('Bummer... Looks like Google Maps is not loading. Please try again later.');
+};
+var googleSuccess = function() {
+
+  ko.applyBindings(new ViewModel());
+
+};
 
 //Get latitude and longitude from the base array.
 var baseLatLon = base.lat + ',' + base.lon;

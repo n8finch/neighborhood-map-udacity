@@ -6,7 +6,7 @@
  * Sliding Panel
  */
 
-$('.sliding-panel-button,.sliding-panel-fade-screen,.sliding-panel-close').on('click touchstart',function (e) {
+$('ul#bcn-list,.sliding-panel-button,.sliding-panel-fade-screen,.sliding-panel-close,.filter-list-elements').on('click',function (e) {
   $('.sliding-panel-content,.sliding-panel-fade-screen').toggleClass('is-visible');
   e.preventDefault();
 });

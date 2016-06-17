@@ -1,6 +1,6 @@
 {
-  "name": "bourbon-starter",
-  "description": "a starter with bourbon, neat, bitters, refills, and jQuery for rapid prototyping",
+  "name": "neighborhood map project",
+  "description": "a SPA for the udacity nanodegree program",
   "main": "index.html",
   "authors": [
     "Nate Finch <finchproservices@gmail.com>"

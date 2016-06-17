@@ -81,21 +81,11 @@
     </ul>
 </div>
 
-<script>
-    var googleError = function() {
-        alert('Bummer... Looks like Google Maps is not loading. Please try again later.');
-    };
-    var googleSuccess = function() {
-
-        ko.applyBindings(new ViewModel());
-
-    };
-</script>
-
-<script async src="https://maps.googleapis.com/maps/api/js?callback=googleSuccess" onerror="googleError()"></script>
-<script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/knockout/dist/knockout.js"></script>
-<script src="js/js.js"></script>
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="js/js.min.js"></script>
+<script async src="https://maps.googleapis.com/maps/api/js?callback=googleSuccess" onerror="googleError()"></script>
+
 
 </body>
 

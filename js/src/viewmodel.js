@@ -40,9 +40,15 @@ var ViewModel = function () {
         info: item.info,
         wiki: item.wiki,
         foursquare: item.lat + ',' + item.lon,
-        animation: google.maps.Animation.BOUNCE,
         /**if the location on the list is clicked than the info window of the marker will appear-**/
         listClick: function (thisMarker) {
+
+          //make ajax calls on menu item clicks
+          console.log('from the viewmodel: ' + ajaxFourSquare(marker.foursquare));
+
+          ajaxWiki(marker.wiki);
+          infowindow.setContent(thisMarker.info);
+          infowindow.open(map, thisMarker);
 
           if (marker.getAnimation() == null) {
             marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -53,12 +59,6 @@ var ViewModel = function () {
             marker.setAnimation(null);
           }
 
-          //make ajax calls on menu item clicks
-          console.log('from the viewmodel: ' + ajaxFourSquare(marker.foursquare));
-
-          ajaxWiki(marker.wiki);
-          infowindow.setContent(thisMarker.info);
-          infowindow.open(map, thisMarker);
         }
       });
       self.markersVisible.push(marker);

@@ -10,6 +10,15 @@
  * Load initial info about Barcelona in the tabs section
  */
 
+var googleError = function() {
+  alert('Bummer... Looks like Google Maps is not loading. Please try again later.');
+};
+var googleSuccess = function() {
+
+  ko.applyBindings(new ViewModel());
+
+};
+
 //Get latitude and longitude from the base array.
 var baseLatLon = base.lat + ',' + base.lon;
 
