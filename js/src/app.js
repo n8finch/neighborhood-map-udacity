@@ -23,7 +23,7 @@ var googleSuccess = function() {
 var baseLatLon = base.lat + ',' + base.lon;
 
 //Make initial calls to Wikipedia and Foursquare for Barcelona information.
-ajaxFourSquare(baseLatLon);
-ajaxWiki(base.wiki);
+// ajaxFourSquare(baseLatLon);
+// ajaxWiki(base.wiki);
 
 

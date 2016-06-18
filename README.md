@@ -42,6 +42,10 @@ I get a lot of friends and family asking me for Barcelona recommendations. So, I
 
 **Make sure you don't have a trailing comma after the final object in the `bcnArr` array, as this will cause an error.**
 
+## The Compiled JS files   
+
+The JS files are in `js/src`. These files are concatinated and minified into the `dist/js/js.min.js` file. If you want to edit or add to these files, edit or add in the `src` folder.
+
 ## A Note About the SCSS Files...
 
 I used Refills components to quickly build out the app. You can modify those in the `sass/refills_components` directory. Any other CSS/SCSS can be done in the `_1.main.scss` file.

@@ -93,7 +93,6 @@ $('.accordion-tabs-minimal').on('click', 'li > a.tab-link', function(event) {
  *
  */
 
-
 var ViewModel = function () {
 
   var self = this;
@@ -105,8 +104,122 @@ var ViewModel = function () {
   self.infoWindows = ko.observableArray([]);
   //create the observable for the filtering list on the menu
   self.filterList = ko.observable('');
-  //create the observable for Foursquare content
-  self.foursquareContent = ko.observable('Init');
+  //create the observable for Wikipedia content
+  self.wikiTitle = ko.observable('test');
+  self.wikiContent = ko.observable('testing');
+  self.wikiLink = ko.observable('http://www.google.com');
+  //create the observables for Foursquare content
+  self.fstitle = ko.observable('title');
+  self.fscontent = ko.observable('content');
+  self.fsphotosArr = ko.observable('photosArr');
+  self.fsphotoURL = ko.observable('img/parlacat.jpg');
+  self.fsurl =ko.observable('fsurl');
+
+  /**
+   * Wikipedia API Call
+   */
+
+  self.ajaxWiki = function (wikiTerm) {
+
+    // ID of the element we will modify
+    var wikiElem = $('#wikipedia-tab');
+
+    //Build the URL and Callback for the jax request
+    var wikiURL = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=';
+    var callback = '&prop=revisions&rvprop=content&format=json&callback=?';
+    wikiURL = wikiURL + wikiTerm + callback;
+
+    //hide any <p> currently displayed
+    // wikiElem.children().fadeOut(1000);
+
+    // Set the timeout if no response is received.
+    var wikiRequestTimeout = setTimeout(function () {
+      wikiElem.text('Bummer! No results could be found to match that address...:-(');
+    }, 5000);
+
+
+    $.ajax({
+      url: wikiURL,
+      dataType: 'json'
+    })
+      .done(function (response) {
+
+        //Assign Responses from Wikipedia to variables for building elements
+        self.wikiTitle = response[1][0];
+        self.wikiLink = response[3][0];
+        self.wikiContent = response[2][0];
+
+        console.log('from inside the Wikipedia ajax call: ' + self.wikiTitle);
+
+        clearTimeout(wikiRequestTimeout);
+      })
+      .fail(function (response) {
+        //callback function if error - an alert will be activated to notify the user of the error
+        var wikiDisplay =
+          '<p>Bummer!... Could not load data from Wikipedia! Make sure you are connected to the Internet, or try again later.</p>';
+
+        wikiElem.append(wikiDisplay);
+      });
+  };
+
+  console.log('from outside the Wikipedia ajax call: ' + self.wikiTitle);
+
+  /*
+   * Get Foursquare Data
+   */
+
+  self.ajaxFourSquare = function (data) {
+
+    // ID of the element we will modify
+    var foursquareElem = $('#foursquare-tab');
+
+    //API Keys
+    var CLIENT_ID_Foursquare = '2EE11MHVU5MQHXAS4YNOTYW3WO4OLJOA0DU5OKLET1VRHNXF';
+    var CLIENT_SECRET_Foursquare = 'SJYX3UAEK3HNWLRPCO4CMYWAQWLYLDAYWYHSMCBDCC3WQKYT';
+
+
+    //hide any <div> currently displayed
+    // foursquareElem.children().fadeOut(1000);
+
+    $.ajax({
+      type: "GET",
+      dataType: 'json',
+      cache: false,
+      url: 'https://api.foursquare.com/v2/venues/explore?',
+      data: 'limit=5&ll=' + data + '&radius=5000&venuePhotos=1&client_id=' + CLIENT_ID_Foursquare + '&client_secret=' + CLIENT_SECRET_Foursquare + '&v=20140806&m=foursquare',
+      async: true
+    })
+      .done(function (response) {
+        var responseArr = response.response.groups[0].items;
+
+        var foursquareDisplay = '';
+
+        for (var i = 0; i < responseArr.length; i++) {
+
+          var self = responseArr[i];
+
+          self.fstitle = responseArr[i].venue.name;
+          self.fscontent = responseArr[i].tips[0].text ? self.tips[0].text : "No tips here!";
+          self.fsphotosArr = responseArr[i].venue.photos.groups[0].items[0];
+          self.fsphotoURL = self.fsphotosArr.prefix + '100x100' + self.fsphotosArr.suffix;
+          self.fsurl = responseArr[i].tips[0].canonicalUrl;
+          
+        }
+
+        console.log('from inside the Foursquare ajax call: ' + self.fstitle);
+
+      })
+      .fail(function (response) {
+        //callback function if error - an alert will be activated to notify the user of the error
+        var foursquareDisplay =
+          '<p>Bummer!... Could not load data from Foursquare! Make sure you are connected to the Internet, or try again later.</p>';
+
+        foursquareElem.append(foursquareDisplay);
+      });
+  };
+
+  console.log('from outside the Foursquare ajax call: ' + self.fstitle);
+
 
   function initialize() {
     //create the map
@@ -132,9 +245,8 @@ var ViewModel = function () {
         listClick: function (thisMarker) {
 
           //make ajax calls on menu item clicks
-          console.log('from the viewmodel: ' + ajaxFourSquare(marker.foursquare));
-
-          ajaxWiki(marker.wiki);
+          self.ajaxFourSquare(marker.foursquare);
+          self.ajaxWiki(marker.wiki);
           infowindow.setContent(thisMarker.info);
           infowindow.open(map, thisMarker);
 
@@ -154,9 +266,9 @@ var ViewModel = function () {
       marker.addListener('click', function () {
 
         //load the ajax call marker clicks
-        console.log('from the viewmodel: ' + ajaxFourSquare(marker.foursquare));
+        self.ajaxFourSquare(marker.foursquare);
 
-        ajaxWiki(marker.wiki);
+        self.ajaxWiki(marker.wiki);
 
         //add animation to map markers
         if (marker.getAnimation() == null) {
@@ -219,131 +331,10 @@ var baseLon = base.lon;
  */
 
 
-/**
- * Wikipedia API Call
- */
-
-
-ajaxWiki = function (wikiTerm) {
-
-  // ID of the element we will modify
-  var wikiElem = $('#wikipedia-tab');
-
-  //Build the URL and Callback for the jax request
-  var wikiURL = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=';
-  var callback = '&prop=revisions&rvprop=content&format=json&callback=?';
-  wikiURL = wikiURL + wikiTerm + callback;
-
-  //hide any <p> currently displayed
-  wikiElem.children().fadeOut(1000);
-
-  // Set the timeout if no response is received.
-  var wikiRequestTimeout = setTimeout(function () {
-    wikiElem.text('Bummer! No results could be found to match that address...:-(');
-  }, 5000);
-
-
-  $.ajax({
-    url: wikiURL,
-    dataType: 'json'
-    })
-    .done( function (response) {
-
-      //Assign Responses from Wikipedia to variables for building elements
-      var wikiTitle = response[1][0];
-      var wikiLink = response[3][0];
-      var wikiContent = response[2][0];
-      var wikiDisplay =
-        '<h3>' + wikiTitle + '</h3>' +
-        '<p>' + wikiContent + '</p>' +
-        '<a href="' + wikiLink + '" target="_blank">Read more on Wikipedia...</a>';
-
-
-      wikiElem.append(wikiDisplay);
-
-
-      clearTimeout(wikiRequestTimeout);
-    })
-    .fail( function (response) {
-      //callback function if error - an alert will be activated to notify the user of the error
-      var wikiDisplay =
-        '<p>Bummer!... Could not load data from Wikipedia! Make sure you are connected to the Internet, or try again later.</p>';
-
-      wikiElem.append(wikiDisplay);
-    });
-
-};
-
-
-/*
- * Get Foursquare Data
- */
-
-ajaxFourSquare = function (data) {
-
-  // ID of the element we will modify
-  var foursquareElem = $('#foursquare-tab');
-
-  //API Keys
-  var CLIENT_ID_Foursquare = '2EE11MHVU5MQHXAS4YNOTYW3WO4OLJOA0DU5OKLET1VRHNXF';
-  var CLIENT_SECRET_Foursquare = 'SJYX3UAEK3HNWLRPCO4CMYWAQWLYLDAYWYHSMCBDCC3WQKYT';
-
-
-  //hide any <div> currently displayed
-  foursquareElem.children().fadeOut(1000);
-
-  $.ajax({
-    type: "GET",
-    dataType: 'json',
-    cache: false,
-    url: 'https://api.foursquare.com/v2/venues/explore?',
-    data: 'limit=5&ll=' + data + '&radius=5000&venuePhotos=1&client_id=' + CLIENT_ID_Foursquare + '&client_secret=' + CLIENT_SECRET_Foursquare + '&v=20140806&m=foursquare',
-    async: true
-  })
-    .done ( function (response) {
-      var responseArr = response.response.groups[0].items;
-
-      var foursquareDisplay = '';
-
-      for (var i = 0; i < responseArr.length; i++) {
-        var title, content, photosArr, photoURL, url;
-        var self = responseArr[i];
-
-
-        title = self.venue.name;
-        content = self.tips[0].text ? self.tips[0].text : "No tips here!";
-        photosArr = self.venue.photos.groups[0].items[0];
-        photoURL = photosArr.prefix + '100x100' + photosArr.suffix;
-        url = self.tips[0].canonicalUrl;
-
-        foursquareDisplay +=
-          '<div class="foursquare-item">' +
-          '<img src="' + photoURL + '" alt=""/>' +
-          '<h3>' + title + '</h3>' +
-          '<p>' + content + '</p>' +
-          '<a href="' + url + '" target="_blank">Read more on FourSquare...</a>' +
-          '</div>';
 
 
 
 
-      }
-
-      console.log('from the ajax call: ' + foursquareDisplay);
-      //foursquareElem.append(foursquareDisplay).hide().fadeIn(700);
-      return foursquareDisplay;
-
-    })
-      .fail( function (response) {
-      //callback function if error - an alert will be activated to notify the user of the error
-      var foursquareDisplay =
-        '<p>Bummer!... Could not load data from Foursquare! Make sure you are connected to the Internet, or try again later.</p>';
-
-      foursquareElem.append(foursquareDisplay);
-    });
-
-
-};
 
 
 /**
@@ -393,7 +384,7 @@ var googleSuccess = function() {
 var baseLatLon = base.lat + ',' + base.lon;
 
 //Make initial calls to Wikipedia and Foursquare for Barcelona information.
-ajaxFourSquare(baseLatLon);
-ajaxWiki(base.wiki);
+// ajaxFourSquare(baseLatLon);
+// ajaxWiki(base.wiki);
 
 
