@@ -17,9 +17,9 @@ var ViewModel = function () {
   //create the observable for the filtering list on the menu
   self.filterList = ko.observable('');
   //create the observable for Wikipedia content
-  self.wikiTitle = ko.observable('test');
-  self.wikiContent = ko.observable('testing');
-  self.wikiLink = ko.observable('http://www.google.com');
+  self.wikiTitle = ko.observable('Barcelona');
+  self.wikiContent = ko.observable('Barcelona is the capital city of the autonomous community of Catalonia in the Kingdom of Spain, as well as the country\'s second most populous municipality, with a population of 1.6 million within city limits...');
+  self.wikiLink = ko.observable('https://en.wikipedia.org/wiki/Barcelona');
   //create the observables for Foursquare content
   self.fstitle = ko.observable('title');
   self.fscontent = ko.observable('content');
@@ -61,8 +61,6 @@ var ViewModel = function () {
         self.wikiLink(response[3][0]);
         self.wikiContent(response[2][0]);
 
-        console.log('from inside the Wikipedia ajax call: ' + self.wikiTitle);
-
         clearTimeout(wikiRequestTimeout);
       })
       .fail(function (response) {
@@ -73,8 +71,6 @@ var ViewModel = function () {
         wikiElem.append(wikiDisplay);
       });
   };
-
-  console.log('from outside the Wikipedia ajax call: ' + self.wikiTitle);
 
   /*
    * Get Foursquare Data
@@ -104,21 +100,18 @@ var ViewModel = function () {
       .done(function (response) {
         var responseArr = response.response.groups[0].items;
 
-        var foursquareDisplay = '';
-
         for (var i = 0; i < responseArr.length; i++) {
 
-          var self = responseArr[i];
+          var resArr = responseArr[i];
+          var fsphotosArr;
 
-          self.fstitle = responseArr[i].venue.name;
-          self.fscontent = responseArr[i].tips[0].text ? self.tips[0].text : "No tips here!";
-          self.fsphotosArr = responseArr[i].venue.photos.groups[0].items[0];
-          self.fsphotoURL = self.fsphotosArr.prefix + '100x100' + self.fsphotosArr.suffix;
-          self.fsurl = responseArr[i].tips[0].canonicalUrl;
+          self.fstitle(resArr.venue.name);
+          self.fscontent(resArr.tips[0].text ? resArr.tips[0].text : "No tips here!");
+          fsphotosArr = resArr.venue.photos.groups[0].items[0];
+          self.fsphotoURL(fsphotosArr.prefix + '100x100' + fsphotosArr.suffix);
+          self.fsurl(resArr.tips[0].canonicalUrl);
           
         }
-
-        console.log('from inside the Foursquare ajax call: ' + self.fstitle);
 
       })
       .fail(function (response) {
@@ -130,7 +123,6 @@ var ViewModel = function () {
       });
   };
 
-  console.log('from outside the Foursquare ajax call: ' + self.fstitle);
 
 
   function initialize() {
