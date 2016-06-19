@@ -21,11 +21,10 @@ var ViewModel = function () {
   self.wikiContent = ko.observable('Barcelona is the capital city of the autonomous community of Catalonia in the Kingdom of Spain, as well as the country\'s second most populous municipality, with a population of 1.6 million within city limits...');
   self.wikiLink = ko.observable('https://en.wikipedia.org/wiki/Barcelona');
   //create the observables for Foursquare content
-  self.fstitle = ko.observable('title');
-  self.fscontent = ko.observable('content');
-  self.fsphotosArr = ko.observable('photosArr');
-  self.fsphotoURL = ko.observable('img/parlacat.jpg');
-  self.fsurl =ko.observable('fsurl');
+  self.fstitle = ko.observable('Parc de la Ciutadella');
+  self.fscontent = ko.observable('This chilled out park provides some welcome respite from the bustling city centre. The fountains are impressive, and it\'s worth renting one of the rowing boats to enjoy a relaxed afternoon...');
+  self.fsphotoURL = ko.observable('https://irs0.4sqi.net/img/general/100x100/56087041_V8nRYS1iIp6I3QReshg9vvvBX5TZ3kdMyQiF6VsYSe8.jpg');
+  self.fsurl =ko.observable('https://foursquare.com/v/parc-de-la-ciutadella/4adcda50f964a5203b4121e3');
 
   /**
    * Wikipedia API Call
