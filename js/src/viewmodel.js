@@ -57,9 +57,9 @@ var ViewModel = function () {
       .done(function (response) {
 
         //Assign Responses from Wikipedia to variables for building elements
-        self.wikiTitle = response[1][0];
-        self.wikiLink = response[3][0];
-        self.wikiContent = response[2][0];
+        self.wikiTitle(response[1][0]);
+        self.wikiLink(response[3][0]);
+        self.wikiContent(response[2][0]);
 
         console.log('from inside the Wikipedia ajax call: ' + self.wikiTitle);
 
