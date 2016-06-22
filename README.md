@@ -4,7 +4,7 @@ A single page app for finding your way around some of my favorite places in Barc
 
 For the Udacity Front End Developer Nano Degree.
 
-To view the live version of this app, navigate to this site. 
+To view the live version of this app, navigate to [this site](http://n8finch.github.io/neighborhood-map-udacity/). 
 
 
 ## To Run This App...
